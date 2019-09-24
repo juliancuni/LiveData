@@ -1,0 +1,35 @@
+{
+  "name": "livedata",
+  "version": "0.0.1",
+  "description": "Simple live_data app for Rally Albania, build with nodejs, express, angular8, socketIO",
+  "main": "dist/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon -x ts-node src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliancuni/LiveData.git"
+  },
+  "author": "Julian Çuni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/juliancuni/LiveData/issues"
+  },
+  "homepage": "https://github.com/juliancuni/LiveData#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "mssql": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/helmet": "0.0.44",
+    "@types/node": "^12.7.5",
+    "nodemon": "^1.19.2",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  }
+}
