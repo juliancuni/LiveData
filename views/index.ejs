@@ -4,31 +4,89 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
 
-<body class="d-flex flex-column h-100">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+</head>
+<style>
+    #liveDataMap {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+
+<body class="d-flex flex-column w-100 h-100">
     <main role="main" class="flex-shrink-0">
-        <div id="map" style="width:100%;height:100vh;"></div>
+        <div id="liveDataMap"></div>
         <div class="container">
         </div>
     </main>
 </body>
 <script>
-    function initMap() {
-        var lat = <%= pilot.x %>;
-        var lng = <%= pilot.y %>;
+    //Set map to 0
+    const lFMap = L.map('liveDataMap').setView([0, 0], 3);
+    //Set default icon
+    const icon = L.icon({
+        iconUrl: '/img/iss.png',
+    });
 
-        var center = { lat: lat, lng: lng };
+    const markerSelf = L.marker([0, 0]).addTo(lFMap);
+    const markerPilot = L.marker([0, 0]).addTo(lFMap);
+    // const marker = L.marker([0, 0], { title: "Internation Space Station", icon: icon }).addTo(lFMap);
+    const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const tiles = L.tileLayer(tileUrl, { attribution });
+    tiles.addTo(lFMap);
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
-            center: center,
-            scrollweel: false
-        });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
+
+    function showPosition(position) {
+        // lFMap.setView([position.coords.latitude, position.coords.longitude]);
+        markerSelf.setLatLng([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
+        lFMap.fitBounds([markerPilot.getLatLng(), markerSelf.getLatLng()])
+    }
+
+    getLocation();
+    markerPilot.setLatLng(["<%= pilot.x %>", "<%= pilot.y %>"]).bindTooltip("Pilot").openTooltip().on('click', clickZoom);
+
+
+    //Test ISS position data
+    const api_uri = 'https://api.wheretheiss.at/v1/satellites/25544';
+
+    let latLngs = [];
+    async function getISS() {
+        const response = await fetch(api_uri);
+        const data = await response.json();
+        const { latitude, longitude } = data;
+        const latLng = [latitude, longitude];
+        lFMap.setView(latLng);
+        marker.setLatLng(latLng).bindTooltip("ISS").openTooltip().on('click', clickZoom);
+        latLngs.push(latLng);
+        const polyline = L.polyline(latLngs, { color: 'red' }).addTo(lFMap);
+        lFMap.fitBounds(polyline.getBounds());
+    }
+
+    // getISS();
+    function clickZoom(e) {
+        lFMap.setView(e.target.getLatLng(), 15);
+    }
+    // setInterval(getISS, 1000);
 </script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWFVTjFuAZg5Ze6W5pzTV4dA_pbdDRdJQ&callback=initMap">
-    </script>
 
 </html>

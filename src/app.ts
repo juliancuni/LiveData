@@ -9,6 +9,8 @@ const app = express();
 
 app.use(helmet());
 app.use(bodyparser.json());
+app.use(express.static(process.cwd() + '/public'));
+
 // app.use('/public/favicon.ico', express.static('images/favicon.ico'));
 Routes(app);
 
