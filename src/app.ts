@@ -9,7 +9,7 @@ const app = express();
 
 app.use(helmet());
 app.use(bodyparser.json());
-app.use('/public/favicon.ico', express.static('images/favicon.ico'));
+// app.use('/public/favicon.ico', express.static('images/favicon.ico'));
 Routes(app);
 
 const server: http.Server = app.listen(3000);
