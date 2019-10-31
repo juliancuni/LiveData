@@ -1,6 +1,10 @@
-FROM node:12.13.0-alpine
-WORKDIR /LiveData
-COPY package.json ./LiveData
+FROM apline:latest
+RUN apk add --no-cache nodejs npm
+
+WORKDIR /app
+
+COPY . /app
+
 RUN npm install
-COPY . ./LiveData
-CMD [ "npm", "run", "dev" ]
+
+EXPOSE 3000
