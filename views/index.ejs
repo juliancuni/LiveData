@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="/public/css/leaflet.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="/public/css/custom.css"/>
 </head>
 <body class="d-flex flex-column w-100 h-100">
@@ -13,16 +14,19 @@
         <div class="liveDataMap" id="liveDataMap">
         </div>
         <div class="container">
-            <div class="pilotList">
+            <div class="pilotList" style="overflow-y: scroll; height:96%;">
                 <div class="d-block d-sm-none">
-                    <button class="btn btn-secondary " type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e pilotëve</button>
+                    <button class="btn btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
+                    <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e pilotëve</button>
                 </div>
                 <div class="d-none d-sm-block">
                     <div class="card">
-                            <div class="card-header">
-                        <h5 class="card-title">Lista e pilotëve</h5>
-                            </div>
-                        <ul class="list-group list-group-flush" >
+                        <div class="card-header">
+                            <span class="card-title">Lista e pilotëve</span>
+                            <button class="btn btn-sm" onclick="location.reload()"><i class='fas fa-sync'></i></button>
+                        </div>
+                        <input type="text" class="form-control form-control-sm" placeholder="Kërko" disabled>
+                        <ul class="list-group list-group-flush test1">
                             <% for(var i=0; i < pilots.length; i++) { %>
                             <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)'>
                                 <%= pilots[i].Pilot %>

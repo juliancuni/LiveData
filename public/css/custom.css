@@ -19,7 +19,7 @@ html, body {
     z-index: 2;
     width: auto;
     height: 100px;
-    display: block;
+    display: flex;
     /* background-color: #fff;
     padding: 5px;
     border: 1px solid #999;
@@ -27,4 +27,7 @@ html, body {
     font-family: 'Roboto', 'sans-serif';
     line-height: 30px;
     padding-left: 10px; */
+}
+.test1 {
+    height: 90px !important;
 }
