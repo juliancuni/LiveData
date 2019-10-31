@@ -24,7 +24,7 @@
                             </div>
                         <ul class="list-group list-group-flush" >
                             <% for(var i=0; i < pilots.length; i++) { %>
-                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)'>
+                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)'>
                                 <%= pilots[i].Pilot %>
                             </li>
                             <% } %>
@@ -47,7 +47,7 @@
             <div class="modal-body">
                 <ul class="list-group list-group-flush">
                 <% for(var i=0; i < pilots.length; i++) { %>
-                    <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)' data-dismiss="modal">
+                    <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)' data-dismiss="modal">
                         <%= pilots[i].Pilot %>
                     </li>
                 <% } %>
@@ -70,7 +70,7 @@
     const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': '<a href="http://rallyalbania.org">Rally Albania</a> | © <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors'});
 
     let pilotMarkers = [];
-    gjejMyPosition();
+    // gjejMyPosition();
     let pilotsJson = <%- JSON.stringify(pilots) %>;
 
     for(let i = 0; i < pilotsJson.length; i++) {
@@ -93,7 +93,14 @@
         lFMap.setView(e.target.getLatLng(), 15);
     }
 
-    function focusPilot(pilot) {
+    function focusPilot(pilot, index) {
+        for(let i = 0; i < pilotMarkers.length; i++) {
+            if(i === index) {
+                pilotMarkers[i].bindTooltip(pilotsJson[i].Pilot).openTooltip().on('click', clickZoom);
+            } else {
+                pilotMarkers[i].unbindTooltip();
+            }
+        }
         lFMap.setView([pilot.CordY, pilot.CordX], 15);
     }
 
