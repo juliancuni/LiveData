@@ -11,8 +11,8 @@ const app = express();
 
 app.use(helmet());
 app.use(bodyparser.json());
-app.use(express.static(process.cwd() + '/public'));
-// app.use('/public/favicon.ico', express.static('images/favicon.ico'));
+app.use('/public', express.static('public'))
+// app.use(express.static(process.cwd() + '/public'));
 Routes(app);
 const server: http.Server = app.listen(3000);
 MsSqlConnect();

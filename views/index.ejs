@@ -57,17 +57,16 @@
                 </div>
                 <div class="d-none d-sm-block">
                     <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Lista e pilotëve</h5>
-                            <% for(var i=0; i < pilot.length; i++) { %>
-                            <p class="card-text">
-                                <%= pilot[i].Pilot %>
-                            </p>
+                            <div class="card-header">
+                        <h5 class="card-title">Lista e pilotëve</h5>
+                            </div>
+                        <ul class="list-group list-group-flush">
+                            <% for(var i=0; i < pilots.length; i++) { %>
+                            <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)'>
+                                <%= pilots[i].Pilot %>
+                            </li>
                             <% } %>
-                            <!-- <p class="card-text">Some quick example text to build on the panel title and make up the
-                                bulk of
-                                the panel's content.</p> -->
-                        </div>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -87,70 +86,37 @@
         crossorigin="anonymous"></script> -->
 </body>
 <script>
-    //Set map to 0. 
-    const lFMap = L.map('liveDataMap').setView([0, 0], 3);
-    //Set default icon. Gjej nje icone te pershtatshme
-    const icon = L.icon({
-        iconUrl: '/img/iss.png',
+    const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});
+
+    let pilotMarkers = [];
+
+    let pilotsJson = <%- JSON.stringify(pilots) %>;
+
+    for(let i = 0; i < pilotsJson.length; i++) {
+        let marker = L.marker([pilotsJson[i].CordY, pilotsJson[i].CordX]).bindTooltip(pilotsJson[i].Pilot).openTooltip().on('click', clickZoom);;
+        pilotMarkers.push(marker);
+    }
+
+
+    let featureGroup = L.featureGroup(pilotMarkers);
+
+    const lFMap = new L.Map('liveDataMap', {
+        'center': [0, 0],
+        'zoom': 0,
+        'layers': [tileLayer, featureGroup]
     });
-    let markerSelf = L.marker([0, 0]).addTo(lFMap);
-    getLocation();
 
-    let pilots = <%- JSON.stringify(pilot) %>;
-    // let markerPilot = L.marker([0, 0]).addTo(lFMap);
-    for(var i = 0; i < pilots.length; i++) {
-        let markerPilot = L.marker([0, 0]).addTo(lFMap).setLatLng([pilots[i].CordY, pilots[i].CordX]).bindTooltip(pilots[i].Pilot).openTooltip().on('click', clickZoom);
-        // console.log(pilots[i].CordX, pilots[i].CordY)
-        markerPilot.setLatLng([pilots[i].CordY, pilots[i].CordX]).bindTooltip(pilots[i].Pilot).openTooltip().on('click', clickZoom);
-        lFMap.fitBounds([markerPilot.getLatLng(), markerSelf.getLatLng()])
-    }
-
-    //Test ISS. Ruaje njehere
-    // const marker = L.marker([0, 0], { title: "Internation Space Station", icon: icon }).addTo(lFMap);
-    const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    const tiles = L.tileLayer(tileUrl, { attribution });
-    tiles.addTo(lFMap);
-
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation Nuk Suportohet Nga Ky Shfletues.");
-        }
-    }
-
-    function showPosition(position) {
-        //not needed. 
-        // lFMap.setView([position.coords.latitude, position.coords.longitude]);
-        markerSelf.setLatLng([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
-    }
-
-    // markerPilot.setLatLng(["<%= pilot.CordX %>", "<%= pilot.CordY %>"]).bindTooltip("Pilot").openTooltip().on('click', clickZoom);
-
-
-    //Test ISS position data
-    const api_uri = 'https://api.wheretheiss.at/v1/satellites/25544';
-
-    let latLngs = [];
-    async function getISS() {
-        const response = await fetch(api_uri);
-        const data = await response.json();
-        const { latitude, longitude } = data;
-        const latLng = [latitude, longitude];
-        lFMap.setView(latLng);
-        marker.setLatLng(latLng).bindTooltip("ISS").openTooltip().on('click', clickZoom);
-        latLngs.push(latLng);
-        const polyline = L.polyline(latLngs, { color: 'red' }).addTo(lFMap);
-        lFMap.fitBounds(polyline.getBounds());
-    }
-
-    // getISS();
+    lFMap.fitBounds(featureGroup.getBounds());
+    //zoom on marker click
     function clickZoom(e) {
-        lFMap.setView(e.target.getLatLng(), 15);
+        console.log(e.target);
+        lFMap.setView(e.target.getLatLng());
     }
-    // setInterval(getISS, 1000);
+
+    function focusPilot(pilot) {
+        lFMap.setView([pilot.CordY, pilot.CordX]);
+    }
+
 </script>
 
 </html>
