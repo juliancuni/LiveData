@@ -13,12 +13,9 @@
         crossorigin="" />
 </head>
 <style>
-    html,
-    body {
+    html, body {
         height: 100%;
-        margin: 0px;
-        padding: 0px;
-        position: relative;
+        margin: 0;
     }
 
     .liveDataMap {
@@ -35,7 +32,9 @@
         top: 10px;
         right: 10px;
         z-index: 2;
-        width: 25%;
+        width: auto;
+        height: 100px;
+        display: block;
         /* background-color: #fff;
         padding: 5px;
         border: 1px solid #999;
@@ -53,16 +52,16 @@
         <div class="container">
             <div class="pilotList">
                 <div class="d-block d-sm-none">
-                    <button class="btn btn-secondary " type="button">Lista</button>
+                    <button class="btn btn-secondary " type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e pilotëve</button>
                 </div>
                 <div class="d-none d-sm-block">
                     <div class="card">
                             <div class="card-header">
                         <h5 class="card-title">Lista e pilotëve</h5>
                             </div>
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group list-group-flush" >
                             <% for(var i=0; i < pilots.length; i++) { %>
-                            <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)'>
+                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)'>
                                 <%= pilots[i].Pilot %>
                             </li>
                             <% } %>
@@ -72,10 +71,37 @@
             </div>
         </div>
     </main>
+
+    <div class="modal fade" id="listaEPiloteveMobile" tabindex="-1" role="dialog" aria-labelledby="listaEPiloteveMobileTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="listaEPiloteveMobileTitle">Lista e pilotëve</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                <% for(var i=0; i < pilots.length; i++) { %>
+                    <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>)' data-dismiss="modal">
+                        <%= pilots[i].Pilot %>
+                    </li>
+                <% } %>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
         integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
         crossorigin=""></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -83,20 +109,20 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script> -->
+        crossorigin="anonymous"></script>
 </body>
 <script>
-    const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'});
+    const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': '© <a href="http://openstreetmap.org">OpenStreetMap</a> | <a href="http://rallyalbania.org">Rally Albania</a>'});
 
     let pilotMarkers = [];
-
+    gjejMyPosition();
     let pilotsJson = <%- JSON.stringify(pilots) %>;
 
     for(let i = 0; i < pilotsJson.length; i++) {
         let marker = L.marker([pilotsJson[i].CordY, pilotsJson[i].CordX]).bindTooltip(pilotsJson[i].Pilot).openTooltip().on('click', clickZoom);;
         pilotMarkers.push(marker);
     }
-
+    
 
     let featureGroup = L.featureGroup(pilotMarkers);
 
@@ -109,12 +135,24 @@
     lFMap.fitBounds(featureGroup.getBounds());
     //zoom on marker click
     function clickZoom(e) {
-        console.log(e.target);
-        lFMap.setView(e.target.getLatLng());
+        lFMap.setView(e.target.getLatLng(), 15);
     }
 
     function focusPilot(pilot) {
-        lFMap.setView([pilot.CordY, pilot.CordX]);
+        lFMap.setView([pilot.CordY, pilot.CordX], 15);
+    }
+
+    function gjejMyPosition() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showMyPosition);
+        } else {
+            alert("Geolocation Nuk Suportohet Nga Ky Shfletues.");
+        }
+    }
+    function showMyPosition(position) {
+        console.log(pilotMarkers.length)
+        let marker = L.marker([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
+        pilotMarkers.push(marker);
     }
 
 </script>
