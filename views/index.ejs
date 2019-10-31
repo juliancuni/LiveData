@@ -16,17 +16,20 @@
         <div class="container">
             <div class="pilotList" style="overflow-y: scroll; height:96%;">
                 <div class="d-block d-sm-none">
-                    <button class="btn btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
-                    <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e pilotëve</button>
+                    <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
+                    <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e mjeteve
+                    <i class="badge badge-success"><%- pilots.length %></i>
+                    </button>
                 </div>
                 <div class="d-none d-sm-block">
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Lista e pilotëve</span>
-                            <button class="btn btn-sm" onclick="location.reload()"><i class='fas fa-sync'></i></button>
+                            <span class="card-title">Lista e mjeteve</span>
+                            <span class="badge badge-success"><i class="badge badge-success"><%- pilots.length %></i></span>
+                            <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
                         </div>
-                        <input type="text" class="form-control form-control-sm" placeholder="Kërko" disabled>
-                        <ul class="list-group list-group-flush test1">
+                        <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetet(this)" >
+                        <ul class="list-group list-group-flush test1" id="mjetetTable">
                             <% for(var i=0; i < pilots.length; i++) { %>
                             <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)'>
                                 <%= pilots[i].Pilot %>
@@ -118,6 +121,20 @@
     function showMyPosition(position) {
         let marker = L.marker([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
         pilotMarkers.push(marker);
+    }
+
+    function filterMjetet(input) {
+        let filter = input.value.toUpperCase();
+        let mjetetTable = document.getElementById("mjetetTable");
+        let li = mjetetTable.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            txtValue = li[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
     }
 
 </script>
