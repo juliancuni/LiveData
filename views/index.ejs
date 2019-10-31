@@ -59,9 +59,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Lista e pilotëve</h5>
-                            <p class="card-text">Some quick example text to build on the panel title and make up the
+                            <% for(var i=0; i < pilot.length; i++) { %>
+                            <p class="card-text">
+                                <%= pilot[i].Pilot %>
+                            </p>
+                            <% } %>
+                            <!-- <p class="card-text">Some quick example text to build on the panel title and make up the
                                 bulk of
-                                the panel's content.</p>
+                                the panel's content.</p> -->
                         </div>
                     </div>
                 </div>
@@ -82,16 +87,24 @@
         crossorigin="anonymous"></script> -->
 </body>
 <script>
-
     //Set map to 0. 
     const lFMap = L.map('liveDataMap').setView([0, 0], 3);
     //Set default icon. Gjej nje icone te pershtatshme
     const icon = L.icon({
         iconUrl: '/img/iss.png',
     });
+    let markerSelf = L.marker([0, 0]).addTo(lFMap);
+    getLocation();
 
-    const markerSelf = L.marker([0, 0]).addTo(lFMap);
-    const markerPilot = L.marker([0, 0]).addTo(lFMap);
+    let pilots = <%- JSON.stringify(pilot) %>;
+    // let markerPilot = L.marker([0, 0]).addTo(lFMap);
+    for(var i = 0; i < pilots.length; i++) {
+        let markerPilot = L.marker([0, 0]).addTo(lFMap).setLatLng([pilots[i].CordY, pilots[i].CordX]).bindTooltip(pilots[i].Pilot).openTooltip().on('click', clickZoom);
+        // console.log(pilots[i].CordX, pilots[i].CordY)
+        markerPilot.setLatLng([pilots[i].CordY, pilots[i].CordX]).bindTooltip(pilots[i].Pilot).openTooltip().on('click', clickZoom);
+        lFMap.fitBounds([markerPilot.getLatLng(), markerSelf.getLatLng()])
+    }
+
     //Test ISS. Ruaje njehere
     // const marker = L.marker([0, 0], { title: "Internation Space Station", icon: icon }).addTo(lFMap);
     const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -104,7 +117,7 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-            alert("Geolocation is not supported by this browser.");
+            alert("Geolocation Nuk Suportohet Nga Ky Shfletues.");
         }
     }
 
@@ -112,11 +125,9 @@
         //not needed. 
         // lFMap.setView([position.coords.latitude, position.coords.longitude]);
         markerSelf.setLatLng([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
-        lFMap.fitBounds([markerPilot.getLatLng(), markerSelf.getLatLng()])
     }
 
-    getLocation();
-    markerPilot.setLatLng(["<%= pilot.x %>", "<%= pilot.y %>"]).bindTooltip("Pilot").openTooltip().on('click', clickZoom);
+    // markerPilot.setLatLng(["<%= pilot.CordX %>", "<%= pilot.CordY %>"]).bindTooltip("Pilot").openTooltip().on('click', clickZoom);
 
 
     //Test ISS position data
