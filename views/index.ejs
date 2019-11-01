@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Rally Albania</title>
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="/public/css/leaflet.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -18,7 +19,7 @@
                 <div>
                     <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
                     <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEmjeteveMobile">Lista e mjeteve
-                    <i class="badge badge-success"><%- mjetet.length %></i>
+                    <i class="badge badge-success"><%- garuesit.length %></i>
                     </button>
                 </div>
             </div>
@@ -28,14 +29,27 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">Lista e mjeteve</span>
-                            <span class="badge badge-success"><i class="badge badge-success"><%- mjetet.length %></i></span>
+                            <span class="badge badge-success"><i class="badge badge-success"><%- garuesit.length %></i></span>
                             <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="garuesitRadio" value="0" checked disabled>
+                                <label class="form-check-label" for="garuesitRadio"><small>Garuesit. </small></label>
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="asistencaRadio" value="1" disabled>
+                                <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
+                            </div>
                         </div>
+
                         <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetet(this)" >
                         <ul class="list-group list-group-flush" id="mjetetTable">
-                            <% for(var i=0; i < mjetet.length; i++) { %>
-                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)'>
-                                <%= mjetet[i].Mjet %>
+                            <% for(var i=0; i < garuesit.length; i++) { %>
+                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
+                                <% if(garuesit[i].neGare) { %>
+                                <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
+                                <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
+                                <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
+                                <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
+                                 <% } %>
                             </li>
                             <% } %>
                         </ul>
@@ -51,18 +65,29 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="listaEmjeteveMobileTitle">Lista e mjetëve</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="garuesitRadio" value="0" checked disabled>
+                    <label class="form-check-label" for="garuesitRadio"><small>Garuesit. </small></label>
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="asistencaRadio" value="1" disabled>
+                    <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
+                </div>
                 <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" >
-                <ul class="list-group list-group-flush" id="mjetetTableMobile">
-                <% for(var i=0; i < mjetet.length; i++) { %>
-                    <li class="list-group-item" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)' data-dismiss="modal">
-                        <%= mjetet[i].Mjet %>
-                    </li>
-                <% } %>
-                </ul>
+                <ul class="list-group list-group-flush" id="mjetetTable">
+                            <% for(var i=0; i < garuesit.length; i++) { %>
+                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
+                                <% if(garuesit[i].neGare) { %>
+                                <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
+                                <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
+                                <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
+                                <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
+                                 <% } %>
+                            </li>
+                            <% } %>
+                        </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -78,17 +103,28 @@
 
 </body>
 <script>
+
     //TODO RT event pa ndikuar harten.
     const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': '<a href="http://rallyalbania.org">Rally Albania</a> | © <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors'});
 
     let mjetMarkers = [];
     //TODO gjejMyPosiztion kur kerkon per 1 mjet (optional: gjejDirections)
     // gjejMyPosition();
-    let mjetetJson = <%- JSON.stringify(mjetet) %>;
+    let garuesitJson = <%- JSON.stringify(garuesit) %>;
 
-    for(let i = 0; i < mjetetJson.length; i++) {
-        let marker = L.marker([mjetetJson[i].Lat, mjetetJson[i].Lng]).bindTooltip(mjetetJson[i].Mjet).openTooltip().on('click', clickZoom);;
+    for(let i = 0; i < garuesitJson.length; i++) {
+        let marker = L.marker([garuesitJson[i].Lat, garuesitJson[i].Lng]).bindTooltip(garuesitJson[i].Mjet).openTooltip().on('click', clickZoom);;
         mjetMarkers.push(marker);
+
+        //Truncate emrat e garuesve me te medhenj se 15 karaktere
+        let emerIPlote = document.getElementById("emer" + i).innerHTML;
+        let gjatesiaELejuar = 15;
+        let emerIShkurtuar;
+        if(emerIPlote.length >= gjatesiaELejuar) {
+            emerIShkurtuar = emerIPlote.substring(0,gjatesiaELejuar);
+            document.getElementById("emer" + i).innerHTML = emerIShkurtuar + " ...";
+        }
+
     }
     
 
@@ -110,7 +146,7 @@
     function focusmjet(mjet, index) {
         for(let i = 0; i < mjetMarkers.length; i++) {
             if(i === index) {
-                mjetMarkers[i].bindTooltip(mjetetJson[i].Mjet).openTooltip().on('click', clickZoom);
+                mjetMarkers[i].bindTooltip(garuesitJson[i].Mjet).openTooltip().on('click', clickZoom);
             } else {
                 mjetMarkers[i].unbindTooltip();
             }
