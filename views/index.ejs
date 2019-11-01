@@ -76,18 +76,18 @@
                     <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
                 </div>
                 <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" >
-                <ul class="list-group list-group-flush" id="mjetetTable">
-                            <% for(var i=0; i < garuesit.length; i++) { %>
-                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
-                                <% if(garuesit[i].neGare) { %>
-                                <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
-                                <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
-                                <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
-                                <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
-                                 <% } %>
-                            </li>
-                            <% } %>
-                        </ul>
+                <ul class="list-group list-group-flush" id="mjetetTableMobile">
+                <% for(var i=0; i < garuesit.length; i++) { %>
+                    <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
+                    <% if(garuesit[i].neGare) { %>
+                        <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
+                        <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
+                        <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
+                        <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
+                        <% } %>
+                    </li>
+                    <% } %>
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
