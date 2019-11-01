@@ -39,8 +39,12 @@
                                 <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
                             </div>
                         </div>
-
-                        <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetet(this)" >
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" aria-label="Small" placeholder="Kërko" onkeyup="filterMjetet(this)" id="kerkim">
+                            <div class="input-group-prepend">
+                                <button class="input-group-text" onclick="fshiKerkim()">x</button>
+                            </div>
+                        </div>
                         <ul class="list-group list-group-flush" id="mjetetTable">
                             <% for(var i=0; i < garuesit.length; i++) { %>
                             <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
@@ -75,7 +79,12 @@
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="asistencaRadio" value="1" disabled>
                     <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
                 </div>
-                <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" >
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" aria-label="Small" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" id="kerkimMobile">
+                    <div class="input-group-prepend">
+                        <button class="input-group-text" onclick="fshiKerkimMobile()">x</button>
+                    </div>
+                </div>
                 <ul class="list-group list-group-flush" id="mjetetTableMobile">
                 <% for(var i=0; i < garuesit.length; i++) { %>
                     <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
@@ -191,6 +200,25 @@
             }
         }
     }
+    
+    function fshiKerkim() {
+        let mjetetTable = document.getElementById("mjetetTable");
+        let li = mjetetTable.getElementsByTagName("li");
+        document.getElementById("kerkim").value = null;
+        for (i = 0; i < li.length; i++) {
+                li[i].style.display = "";
+        }
+    }
+
+    function fshiKerkimMobile() {
+        let mjetetTable = document.getElementById("mjetetTableMobile");
+        let li = mjetetTable.getElementsByTagName("li");
+        document.getElementById("kerkimMobile").value = "";
+        for (i = 0; i < li.length; i++) {
+                li[i].style.display = "";
+        }
+    }
+    
 
 </script>
 
