@@ -14,14 +14,17 @@
         <div class="liveDataMap" id="liveDataMap">
         </div>
         <div class="container">
-            <div class="pilotList" style="overflow-y: scroll; height:96%;">
-                <div class="d-block d-sm-none">
+            <div class="mobile-list d-block d-sm-none">
+                <div>
                     <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
                     <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e mjeteve
                     <i class="badge badge-success"><%- pilots.length %></i>
                     </button>
                 </div>
-                <div class="d-none d-sm-block">
+            </div>
+            <div class="pilotList d-none d-sm-block" style="overflow-y: scroll; height:96%;">
+                
+                <div class="">
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">Lista e mjeteve</span>
@@ -91,7 +94,8 @@
     const lFMap = new L.Map('liveDataMap', {
         'center': [0, 0],
         'zoom': 0,
-        'layers': [tileLayer, featureGroup]
+        'layers': [tileLayer, featureGroup],
+        'tap': false
     });
 
     lFMap.fitBounds(featureGroup.getBounds());

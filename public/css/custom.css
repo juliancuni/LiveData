@@ -1,6 +1,6 @@
 html, body {
-    height: 100%;
-    margin: 0;
+    /* height: 100%;
+    margin: 0; */
 }
 
 .liveDataMap {
@@ -18,7 +18,7 @@ html, body {
     right: 10px;
     z-index: 2;
     width: auto;
-    height: 100px;
+    /* height: 100px; */
     display: flex;
     /* background-color: #fff;
     padding: 5px;
@@ -28,6 +28,10 @@ html, body {
     line-height: 30px;
     padding-left: 10px; */
 }
-.test1 {
-    height: 90px !important;
+.mobile-list {
+    /* height: 90px !important; */
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    right: 10px;
 }
