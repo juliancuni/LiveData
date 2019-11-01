@@ -35,7 +35,7 @@
                         <ul class="list-group list-group-flush" id="mjetetTable">
                             <% for(var i=0; i < mjetet.length; i++) { %>
                             <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)'>
-                                <%= mjetet[i].Pilot %>
+                                <%= mjetet[i].Mjet %>
                             </li>
                             <% } %>
                         </ul>
@@ -59,7 +59,7 @@
                 <ul class="list-group list-group-flush" id="mjetetTableMobile">
                 <% for(var i=0; i < mjetet.length; i++) { %>
                     <li class="list-group-item" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)' data-dismiss="modal">
-                        <%= mjetet[i].Pilot %>
+                        <%= mjetet[i].Mjet %>
                     </li>
                 <% } %>
                 </ul>
@@ -87,7 +87,7 @@
     let mjetetJson = <%- JSON.stringify(mjetet) %>;
 
     for(let i = 0; i < mjetetJson.length; i++) {
-        let marker = L.marker([mjetetJson[i].CordY, mjetetJson[i].CordX]).bindTooltip(mjetetJson[i].Pilot).openTooltip().on('click', clickZoom);;
+        let marker = L.marker([mjetetJson[i].Lat, mjetetJson[i].Lng]).bindTooltip(mjetetJson[i].Mjet).openTooltip().on('click', clickZoom);;
         mjetMarkers.push(marker);
     }
     
@@ -110,12 +110,12 @@
     function focusmjet(mjet, index) {
         for(let i = 0; i < mjetMarkers.length; i++) {
             if(i === index) {
-                mjetMarkers[i].bindTooltip(mjetetJson[i].Pilot).openTooltip().on('click', clickZoom);
+                mjetMarkers[i].bindTooltip(mjetetJson[i].Mjet).openTooltip().on('click', clickZoom);
             } else {
                 mjetMarkers[i].unbindTooltip();
             }
         }
-        lFMap.setView([mjet.CordY, mjet.CordX], 15);
+        lFMap.setView([mjet.Lat, mjet.Lng], 15);
     }
 
     function gjejMyPosition() {
