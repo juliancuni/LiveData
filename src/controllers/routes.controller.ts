@@ -22,7 +22,18 @@ export function Routes(app: express.Express) {
         let testQry = "SELECT tavl.Object.Number as Mjet,m.X as Lng,m.Y as Lat  FROM tavl.Message as m  JOIN ( SELECT tavl.Message.ObjectId, MAX(MessageId) as MessageId FROM tavl.Message inner join tavl.Object as o on tavl.Message.ObjectId=o.ObjectId where o.ClientId=16 and o.Number!='null' and GpsTime >= '" + dataSotStart + "' and GpsTime <= '" + dataSotEnd + "' GROUP BY tavl.Message.ObjectId ) t2 ON m.ObjectId = t2.ObjectId AND m.MessageId = t2.MessageId join tavl.Object on tavl.Object.ObjectId=m.ObjectId";
         ExecQuery(testQry).then((data) => {
             // console.log(data);
-            res.render('../views/index.ejs', { mjetet: data });
+            let mjetetSort = data.sort(function (a, b) {
+                var mjetiA = a.Mjet.toUpperCase(); 
+                var mjetiB = b.Mjet.toUpperCase(); 
+                if (mjetiA < mjetiB) {
+                    return -1;
+                }
+                if (mjetiA > mjetiB) {
+                    return 1;
+                }
+                return 0;
+            })
+            res.render('../views/index.ejs', { mjetet: mjetetSort });
             // res.render("../views/test", { Mjet: data });
         }).catch((err) => {
             console.log(err);
