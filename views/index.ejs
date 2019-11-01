@@ -19,73 +19,82 @@
                 <div>
                     <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
                     <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEmjeteveMobile">Lista e mjeteve
-                    <i class="badge badge-success"><%- garuesit.length %></i>
+                    <i class="badge badge-warning" id="garuesitMobileNr"><%- garuesit.length %></i>
                     </button>
                 </div>
             </div>
             <!-- Mobile scroll/drag OK. Div height problem djathtas. Majtas OK! -->
             <div class="mjetet-list d-none d-sm-block" style="overflow-y: scroll; height:96%;">
-                <div class="">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Lista e mjeteve</span>
-                            <span class="badge badge-success"><i class="badge badge-success"><%- garuesit.length %></i></span>
-                            <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
-                            <br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="garuesitRadio" value="0" checked disabled>
-                                <label class="form-check-label" for="garuesitRadio"><small>Garuesit. </small></label>
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="asistencaRadio" value="1" disabled>
-                                <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
-                            </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title" id="listaEmjeteveTitle">Lista e garuesve</span>
+                        <span><i class="badge badge-warning" id="garuesitNr"><%- garuesit.length %></i></span>
+                        <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="mjetetRadio" id="garuesitRadio" value="0" onclick="toggleMjetetKategori(this);" checked>
+                            <label class="form-check-label" for="garuesitRadio"><small>Garuesit. </small></label>
+                            <input class="form-check-input" type="radio" name="mjetetRadio" id="asistencaRadio" value="1" onclick="toggleMjetetKategori(this);">
+                            <label class="form-check-label" for="asistencaRadio"><small>Staff</small></label>
                         </div>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" aria-label="Small" placeholder="Kërko" onkeyup="filterMjetet(this)" id="kerkim">
-                            <div class="input-group-prepend">
-                                <button class="input-group-text" onclick="fshiKerkim()">x</button>
-                            </div>
-                        </div>
-                        <ul class="list-group list-group-flush" id="mjetetTable">
-                            <% for(var i=0; i < garuesit.length; i++) { %>
-                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
-                                <% if(garuesit[i].neGare) { %>
-                                <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
-                                <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
-                                <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
-                                <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
-                                 <% } %>
-                            </li>
-                            <% } %>
-                        </ul>
                     </div>
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" aria-label="Small" placeholder="Kërko" onkeyup="filterMjetet(this)" id="kerkim">
+                        <div class="input-group-prepend">
+                            <button class="input-group-text" onclick="fshiKerkim()">x</button>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush" id="garuesitTable">
+                        <% for(var i=0; i < garuesit.length; i++) { %>
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
+                            <% if(garuesit[i].neGare) { %>
+                            <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
+                            <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
+                            <span class="badge badge-info" style="width: 25px"><small><%= garuesit[i].kategoria %></small></span>
+                            <span><small id="emer<%= i %>"><%= garuesit[i].emer %></small></span>
+                                <% } %>
+                        </li>
+                        <% } %>
+                    </ul>
+                    <ul class="list-group list-group-flush" id="asistencaTable" style="display: none;">
+                        <% for(var i=0; i < asistenca.length; i++) { %>
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>">
+                            <% if(!asistenca[i].neGare) { %>
+                            <span class="badge badge-success"><small>Staff</small></span>
+                            <span class="badge badge-dark" style="width: 55px"><small><%= asistenca[i].nrGaruesit %></small></span>
+                            <span><small id="emer<%= i %>"><%= asistenca[i].emer %></small></span>
+                                <% } %>
+                        </li>
+                        <% } %>
+                    </ul>
                 </div>
             </div>
         </div>
     </main>
-
+    <!-- MODAL -->
     <div class="modal fade" id="listaEmjeteveMobile" tabindex="-1" role="dialog" aria-labelledby="listaEmjeteveMobileTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="listaEmjeteveMobileTitle">Lista e mjeteve</h5>
+                <h5 class="modal-title" id="listaEmjeteveTitleMobile">Lista e garuesve</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="garuesitRadio" value="0" checked disabled>
-                    <label class="form-check-label" for="garuesitRadio"><small>Garuesit. </small></label>
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="asistencaRadio" value="1" disabled>
-                    <label class="form-check-label" for="asistencaRadio"><small>Asistenca</small></label>
-                </div>
+                            <input class="form-check-input" type="radio" name="mjetetRadio" id="garuesitRadioMobile" value="0" onclick="toggleMjetetKategori(this);" checked>
+                            <label class="form-check-label" for="garuesitRadioMobile"><small>Garuesit. </small></label>
+                            <input class="form-check-input" type="radio" name="mjetetRadio" id="asistencaRadioMobile" value="1" onclick="toggleMjetetKategori(this);">
+                            <label class="form-check-label" for="asistencaRadioMobile"><small>Staff</small></label>
+                        </div>
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" aria-label="Small" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" id="kerkimMobile">
                     <div class="input-group-prepend">
                         <button class="input-group-text" onclick="fshiKerkimMobile()">x</button>
                     </div>
                 </div>
-                <ul class="list-group list-group-flush" id="mjetetTableMobile">
+                <ul class="list-group list-group-flush" id="garuesitTableMobile">
                 <% for(var i=0; i < garuesit.length; i++) { %>
                     <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
                     <% if(garuesit[i].neGare) { %>
@@ -97,6 +106,17 @@
                     </li>
                     <% } %>
                 </ul>
+                <ul class="list-group list-group-flush" id="asistencaTableMobile" style="display: none;">
+                        <% for(var i=0; i < asistenca.length; i++) { %>
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>">
+                            <% if(!asistenca[i].neGare) { %>
+                            <span class="badge badge-success"><small>Staff</small></span>
+                            <span class="badge badge-dark" style="width: 55px"><small><%= asistenca[i].nrGaruesit %></small></span>
+                            <span><small id="emer<%= i %>"><%= asistenca[i].emer %></small></span>
+                                <% } %>
+                        </li>
+                        <% } %>
+                    </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,7 +124,7 @@
             </div>
         </div>
     </div>
-
+    <!-- end MODAL -->
     <script src="/public/js/leaflet.js"></script>
     <script src="/public/js/jquery-3.3.1.slim.min.js"></script>
     <script src="/public/js/popper.min.js"></script>
@@ -120,11 +140,25 @@
     //TODO gjejMyPosiztion kur kerkon per 1 mjet (optional: gjejDirections)
     // gjejMyPosition();
     let garuesitJson = <%- JSON.stringify(garuesit) %>;
-
+    let asistencaJson = <%- JSON.stringify(asistenca) %>;
+    console.log(asistencaJson);
     for(let i = 0; i < garuesitJson.length; i++) {
         let marker = L.marker([garuesitJson[i].Lat, garuesitJson[i].Lng]).bindTooltip(garuesitJson[i].nrGaruesit + " | " + garuesitJson[i].kombesia + " | " + garuesitJson[i].kategoria + " | " + garuesitJson[i].emer).openTooltip().on('click', clickZoom);;
         mjetMarkers.push(marker);
 
+        //Truncate emrat e garuesve me te medhenj se 15 karaktere
+        let emerIPlote = document.getElementById("emer" + i).innerHTML;
+        let gjatesiaELejuar = 15;
+        let emerIShkurtuar;
+        if(emerIPlote.length >= gjatesiaELejuar) {
+            emerIShkurtuar = emerIPlote.substring(0,gjatesiaELejuar);
+            document.getElementById("emer" + i).innerHTML = emerIShkurtuar + " ...";
+        }
+    }
+
+    for(let i = 0; i < asistencaJson.length; i++) {
+        let marker = L.marker([asistencaJson[i].Lat, asistencaJson[i].Lng]).bindTooltip("Assist | " + asistencaJson[i].nrGaruesit + " | " + asistencaJson[i].emer).openTooltip().on('click', clickZoom);;
+        mjetMarkers.push(marker);
         //Truncate emrat e garuesve me te medhenj se 15 karaktere
         let emerIPlote = document.getElementById("emer" + i).innerHTML;
         let gjatesiaELejuar = 15;
@@ -175,8 +209,8 @@
 
     function filterMjetet(input) {
         let filter = input.value.toUpperCase();
-        let mjetetTable = document.getElementById("mjetetTable");
-        let li = mjetetTable.getElementsByTagName("li");
+        let garuesitTable = document.getElementById("garuesitTable");
+        let li = garuesitTable.getElementsByTagName("li");
         for (i = 0; i < li.length; i++) {
             txtValue = li[i].innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -189,8 +223,8 @@
 
     function filterMjetetMobile(input) {
         let filter = input.value.toUpperCase();
-        let mjetetTable = document.getElementById("mjetetTableMobile");
-        let li = mjetetTable.getElementsByTagName("li");
+        let garuesitTable = document.getElementById("garuesitTableMobile");
+        let li = garuesitTable.getElementsByTagName("li");
         for (i = 0; i < li.length; i++) {
             txtValue = li[i].innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -202,8 +236,8 @@
     }
     
     function fshiKerkim() {
-        let mjetetTable = document.getElementById("mjetetTable");
-        let li = mjetetTable.getElementsByTagName("li");
+        let garuesitTable = document.getElementById("garuesitTable");
+        let li = garuesitTable.getElementsByTagName("li");
         document.getElementById("kerkim").value = null;
         for (i = 0; i < li.length; i++) {
                 li[i].style.display = "";
@@ -211,14 +245,35 @@
     }
 
     function fshiKerkimMobile() {
-        let mjetetTable = document.getElementById("mjetetTableMobile");
-        let li = mjetetTable.getElementsByTagName("li");
+        let garuesitTable = document.getElementById("garuesitTableMobile");
+        let li = garuesitTable.getElementsByTagName("li");
         document.getElementById("kerkimMobile").value = "";
         for (i = 0; i < li.length; i++) {
                 li[i].style.display = "";
         }
     }
     
+    function toggleMjetetKategori(e) {
+        if(e.value === "1") {
+            document.getElementById("asistencaTable").style.display = "";
+            document.getElementById("asistencaTableMobile").style.display = "";
+            document.getElementById("garuesitTable").style.display = "none";
+            document.getElementById("garuesitTableMobile").style.display = "none";
+            document.getElementById("listaEmjeteveTitle").innerHTML = "Lista e stafit";
+            document.getElementById("listaEmjeteveTitleMobile").innerHTML = "Lista e stafit";
+            // document.getElementById("garuesitNr").innerText = garuesitJson.length;
+            document.getElementById("garuesitNr").innerText = asistencaJson.length;
+        } else if(e.value === "0") {
+            document.getElementById("asistencaTable").style.display = "none";
+            document.getElementById("asistencaTableMobile").style.display = "none";
+            document.getElementById("garuesitTable").style.display = "";
+            document.getElementById("garuesitTableMobile").style.display = "";
+            document.getElementById("listaEmjeteveTitle").innerHTML = "Lista e garuesve";
+            document.getElementById("listaEmjeteveTitleMobile").innerHTML = "Lista e garuesve";
+            // document.getElementById("garuesitNr").innerText = garuesitJson.length;
+            document.getElementById("garuesitNr").innerText = garuesitJson.length;
+        }
+    }
 
 </script>
 
