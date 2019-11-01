@@ -17,8 +17,8 @@
             <div class="mobile-mjetet-list d-block d-sm-none">
                 <div>
                     <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
-                    <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e mjeteve
-                    <i class="badge badge-success"><%- pilots.length %></i>
+                    <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEmjeteveMobile">Lista e mjeteve
+                    <i class="badge badge-success"><%- mjetet.length %></i>
                     </button>
                 </div>
             </div>
@@ -28,14 +28,14 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">Lista e mjeteve</span>
-                            <span class="badge badge-success"><i class="badge badge-success"><%- pilots.length %></i></span>
+                            <span class="badge badge-success"><i class="badge badge-success"><%- mjetet.length %></i></span>
                             <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
                         </div>
                         <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetet(this)" >
                         <ul class="list-group list-group-flush" id="mjetetTable">
-                            <% for(var i=0; i < pilots.length; i++) { %>
-                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)'>
-                                <%= pilots[i].Pilot %>
+                            <% for(var i=0; i < mjetet.length; i++) { %>
+                            <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)'>
+                                <%= mjetet[i].Pilot %>
                             </li>
                             <% } %>
                         </ul>
@@ -45,11 +45,11 @@
         </div>
     </main>
 
-    <div class="modal fade" id="listaEPiloteveMobile" tabindex="-1" role="dialog" aria-labelledby="listaEPiloteveMobileTitle" aria-hidden="true">
+    <div class="modal fade" id="listaEmjeteveMobile" tabindex="-1" role="dialog" aria-labelledby="listaEmjeteveMobileTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="listaEPiloteveMobileTitle">Lista e pilotëve</h5>
+                <h5 class="modal-title" id="listaEmjeteveMobileTitle">Lista e mjetëve</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -57,9 +57,9 @@
             <div class="modal-body">
                 <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" >
                 <ul class="list-group list-group-flush" id="mjetetTableMobile">
-                <% for(var i=0; i < pilots.length; i++) { %>
-                    <li class="list-group-item" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)' data-dismiss="modal">
-                        <%= pilots[i].Pilot %>
+                <% for(var i=0; i < mjetet.length; i++) { %>
+                    <li class="list-group-item" onclick='focusmjet(<%- JSON.stringify(mjetet[i]) %>, <%- i %>)' data-dismiss="modal">
+                        <%= mjetet[i].Pilot %>
                     </li>
                 <% } %>
                 </ul>
@@ -81,18 +81,18 @@
     //TODO RT event pa ndikuar harten.
     const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': '<a href="http://rallyalbania.org">Rally Albania</a> | © <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors'});
 
-    let pilotMarkers = [];
+    let mjetMarkers = [];
     //TODO gjejMyPosiztion kur kerkon per 1 mjet (optional: gjejDirections)
     // gjejMyPosition();
-    let pilotsJson = <%- JSON.stringify(pilots) %>;
+    let mjetetJson = <%- JSON.stringify(mjetet) %>;
 
-    for(let i = 0; i < pilotsJson.length; i++) {
-        let marker = L.marker([pilotsJson[i].CordY, pilotsJson[i].CordX]).bindTooltip(pilotsJson[i].Pilot).openTooltip().on('click', clickZoom);;
-        pilotMarkers.push(marker);
+    for(let i = 0; i < mjetetJson.length; i++) {
+        let marker = L.marker([mjetetJson[i].CordY, mjetetJson[i].CordX]).bindTooltip(mjetetJson[i].Pilot).openTooltip().on('click', clickZoom);;
+        mjetMarkers.push(marker);
     }
     
 
-    let featureGroup = L.featureGroup(pilotMarkers);
+    let featureGroup = L.featureGroup(mjetMarkers);
 
     const lFMap = new L.Map('liveDataMap', {
         'center': [0, 0],
@@ -107,15 +107,15 @@
         lFMap.setView(e.target.getLatLng(), 15);
     }
 
-    function focusPilot(pilot, index) {
-        for(let i = 0; i < pilotMarkers.length; i++) {
+    function focusmjet(mjet, index) {
+        for(let i = 0; i < mjetMarkers.length; i++) {
             if(i === index) {
-                pilotMarkers[i].bindTooltip(pilotsJson[i].Pilot).openTooltip().on('click', clickZoom);
+                mjetMarkers[i].bindTooltip(mjetetJson[i].Pilot).openTooltip().on('click', clickZoom);
             } else {
-                pilotMarkers[i].unbindTooltip();
+                mjetMarkers[i].unbindTooltip();
             }
         }
-        lFMap.setView([pilot.CordY, pilot.CordX], 15);
+        lFMap.setView([mjet.CordY, mjet.CordX], 15);
     }
 
     function gjejMyPosition() {
@@ -127,7 +127,7 @@
     }
     function showMyPosition(position) {
         let marker = L.marker([position.coords.latitude, position.coords.longitude]).bindTooltip("Self").openTooltip().on('click', clickZoom);
-        pilotMarkers.push(marker);
+        mjetMarkers.push(marker);
     }
 
     function filterMjetet(input) {
