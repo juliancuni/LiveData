@@ -32,7 +32,7 @@
                             <button class="btn btn-sm" onclick="location.reload()"><span class='fas fa-sync'></span></button>
                         </div>
                         <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetet(this)" >
-                        <ul class="list-group list-group-flush test1" id="mjetetTable">
+                        <ul class="list-group list-group-flush" id="mjetetTable">
                             <% for(var i=0; i < pilots.length; i++) { %>
                             <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)'>
                                 <%= pilots[i].Pilot %>
@@ -55,9 +55,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ul class="list-group list-group-flush">
+                <input type="text" class="form-control form-control-sm" placeholder="Kërko" onkeyup="filterMjetetMobile(this)" >
+                <ul class="list-group list-group-flush" id="mjetetTableMobile">
                 <% for(var i=0; i < pilots.length; i++) { %>
-                    <li class="list-group-item" style="cursor: pointer;" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)' data-dismiss="modal">
+                    <li class="list-group-item" onclick='focusPilot(<%- JSON.stringify(pilots[i]) %>, <%- i %>)' data-dismiss="modal">
                         <%= pilots[i].Pilot %>
                     </li>
                 <% } %>
@@ -130,6 +131,20 @@
     function filterMjetet(input) {
         let filter = input.value.toUpperCase();
         let mjetetTable = document.getElementById("mjetetTable");
+        let li = mjetetTable.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            txtValue = li[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+
+    function filterMjetetMobile(input) {
+        let filter = input.value.toUpperCase();
+        let mjetetTable = document.getElementById("mjetetTableMobile");
         let li = mjetetTable.getElementsByTagName("li");
         for (i = 0; i < li.length; i++) {
             txtValue = li[i].innerText;
