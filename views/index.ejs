@@ -141,7 +141,6 @@
     // gjejMyPosition();
     let garuesitJson = <%- JSON.stringify(garuesit) %>;
     let asistencaJson = <%- JSON.stringify(asistenca) %>;
-    console.log(asistencaJson);
     for(let i = 0; i < garuesitJson.length; i++) {
         let marker = L.marker([garuesitJson[i].Lat, garuesitJson[i].Lng]).bindTooltip(garuesitJson[i].nrGaruesit + " | " + garuesitJson[i].kombesia + " | " + garuesitJson[i].kategoria + " | " + garuesitJson[i].emer).openTooltip().on('click', clickZoom);;
         mjetMarkers.push(marker);
@@ -185,13 +184,16 @@
     }
 
     function focusmjet(mjet, index) {
-        for(let i = 0; i < mjetMarkers.length; i++) {
-            if(i === index) {
-                mjetMarkers[i].toggleTooltip();
-            } else {
-                if(mjetMarkers[i].isTooltipOpen()) mjetMarkers[i].toggleTooltip();
+        if(mjet.neGare) {
+            for(let i = 0; i < mjetMarkers.length; i++) {
+                if(i === index) {
+                    mjetMarkers[i].toggleTooltip();
+                } else {
+                    if(mjetMarkers[i].isTooltipOpen()) mjetMarkers[i].toggleTooltip();
+                }
             }
         }
+        
         lFMap.setView([mjet.Lat, mjet.Lng], 15);
     }
 
