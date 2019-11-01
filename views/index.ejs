@@ -63,7 +63,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="listaEmjeteveMobileTitle">Lista e mjetëve</h5>
+                <h5 class="modal-title" id="listaEmjeteveMobileTitle">Lista e mjeteve</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -113,7 +113,7 @@
     let garuesitJson = <%- JSON.stringify(garuesit) %>;
 
     for(let i = 0; i < garuesitJson.length; i++) {
-        let marker = L.marker([garuesitJson[i].Lat, garuesitJson[i].Lng]).bindTooltip(garuesitJson[i].Mjet).openTooltip().on('click', clickZoom);;
+        let marker = L.marker([garuesitJson[i].Lat, garuesitJson[i].Lng]).bindTooltip(garuesitJson[i].nrGaruesit + " | " + garuesitJson[i].kombesia + " | " + garuesitJson[i].kategoria + " | " + garuesitJson[i].emer).openTooltip().on('click', clickZoom);;
         mjetMarkers.push(marker);
 
         //Truncate emrat e garuesve me te medhenj se 15 karaktere
@@ -124,10 +124,8 @@
             emerIShkurtuar = emerIPlote.substring(0,gjatesiaELejuar);
             document.getElementById("emer" + i).innerHTML = emerIShkurtuar + " ...";
         }
-
     }
     
-
     let featureGroup = L.featureGroup(mjetMarkers);
 
     const lFMap = new L.Map('liveDataMap', {
@@ -146,9 +144,9 @@
     function focusmjet(mjet, index) {
         for(let i = 0; i < mjetMarkers.length; i++) {
             if(i === index) {
-                mjetMarkers[i].bindTooltip(garuesitJson[i].Mjet).openTooltip().on('click', clickZoom);
+                mjetMarkers[i].toggleTooltip();
             } else {
-                mjetMarkers[i].unbindTooltip();
+                if(mjetMarkers[i].isTooltipOpen()) mjetMarkers[i].toggleTooltip();
             }
         }
         lFMap.setView([mjet.Lat, mjet.Lng], 15);
