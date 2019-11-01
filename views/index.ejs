@@ -108,7 +108,7 @@
                 </ul>
                 <ul class="list-group list-group-flush" id="asistencaTableMobile" style="display: none;">
                         <% for(var i=0; i < asistenca.length; i++) { %>
-                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>">
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>" data-dismiss="modal">
                             <% if(!asistenca[i].neGare) { %>
                             <span class="badge badge-success"><small>Staff</small></span>
                             <span class="badge badge-dark" style="width: 55px"><small><%= asistenca[i].nrGaruesit %></small></span>
