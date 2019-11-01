@@ -1,6 +1,6 @@
 html, body {
-    /* height: 100%;
-    margin: 0; */
+    height: 100%;
+    margin: 0;
 }
 
 .liveDataMap {
@@ -12,7 +12,7 @@ html, body {
     z-index: 1;
 }
 
-.pilotList {
+.mjetet-list {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -28,7 +28,7 @@ html, body {
     line-height: 30px;
     padding-left: 10px; */
 }
-.mobile-list {
+.mobile-mjetet-list {
     /* height: 90px !important; */
     position: absolute;
     z-index: 2;

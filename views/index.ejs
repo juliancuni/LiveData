@@ -14,7 +14,7 @@
         <div class="liveDataMap" id="liveDataMap">
         </div>
         <div class="container">
-            <div class="mobile-list d-block d-sm-none">
+            <div class="mobile-mjetet-list d-block d-sm-none">
                 <div>
                     <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()"><i class='fas fa-sync'></i></button>
                     <button class="btn btn-secondary btn-sm" type="button"data-toggle="modal" data-target="#listaEPiloteveMobile">Lista e mjeteve
@@ -22,8 +22,8 @@
                     </button>
                 </div>
             </div>
-            <div class="pilotList d-none d-sm-block" style="overflow-y: scroll; height:96%;">
-                
+            <!-- Mobile scroll/drag OK. Div height problem djathtas. Majtas OK! -->
+            <div class="mjetet-list d-none d-sm-block" style="overflow-y: scroll; height:96%;">
                 <div class="">
                     <div class="card">
                         <div class="card-header">
@@ -78,9 +78,11 @@
 
 </body>
 <script>
+    //TODO RT event pa ndikuar harten.
     const tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 'attribution': '<a href="http://rallyalbania.org">Rally Albania</a> | © <a href="http://openstreetmap.org">OpenStreetMap</a> Contributors'});
 
     let pilotMarkers = [];
+    //TODO gjejMyPosiztion kur kerkon per 1 mjet (optional: gjejDirections)
     // gjejMyPosition();
     let pilotsJson = <%- JSON.stringify(pilots) %>;
 
