@@ -46,7 +46,7 @@
                     </div>
                     <ul class="list-group list-group-flush" id="garuesitTable">
                         <% for(var i=0; i < garuesit.length; i++) { %>
-                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusMjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>">
                             <% if(garuesit[i].neGare) { %>
                             <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
                             <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
@@ -58,7 +58,7 @@
                     </ul>
                     <ul class="list-group list-group-flush" id="asistencaTable" style="display: none;">
                         <% for(var i=0; i < asistenca.length; i++) { %>
-                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>">
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusMjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>">
                             <% if(!asistenca[i].neGare) { %>
                             <span class="badge badge-success"><small>Staff</small></span>
                             <span class="badge badge-dark" style="width: 55px"><small><%= asistenca[i].nrGaruesit %></small></span>
@@ -96,7 +96,7 @@
                 </div>
                 <ul class="list-group list-group-flush" id="garuesitTableMobile">
                 <% for(var i=0; i < garuesit.length; i++) { %>
-                    <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
+                    <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusMjet(<%- JSON.stringify(garuesit[i]) %>, <%- i %>)' title="<%= garuesit[i].emer %>" data-dismiss="modal">
                     <% if(garuesit[i].neGare) { %>
                         <span class="badge badge-danger" style="width: 40px"><%= garuesit[i].nrGaruesit %></span>
                         <span class="badge" style="width: 20px"><%= garuesit[i].kombesia %></span>
@@ -108,7 +108,7 @@
                 </ul>
                 <ul class="list-group list-group-flush" id="asistencaTableMobile" style="display: none;">
                         <% for(var i=0; i < asistenca.length; i++) { %>
-                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusmjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>" data-dismiss="modal">
+                        <li class="list-group-item p-1" style="cursor: pointer;" onclick='focusMjet(<%- JSON.stringify(asistenca[i]) %>, <%- i %>)' title="<%= asistenca[i].emer %>" data-dismiss="modal">
                             <% if(!asistenca[i].neGare) { %>
                             <span class="badge badge-success"><small>Staff</small></span>
                             <span class="badge badge-dark" style="width: 55px"><small><%= asistenca[i].nrGaruesit %></small></span>
@@ -183,17 +183,16 @@
         lFMap.setView(e.target.getLatLng(), 15);
     }
 
-    function focusmjet(mjet, index) {
-        if(mjet.neGare) {
-            for(let i = 0; i < mjetMarkers.length; i++) {
-                if(i === index) {
-                    mjetMarkers[i].toggleTooltip();
-                } else {
-                    if(mjetMarkers[i].isTooltipOpen()) mjetMarkers[i].toggleTooltip();
-                }
+    function focusMjet(mjet) {
+        for(let i = 0; i < mjetMarkers.length; i++) {
+            if(mjetMarkers[i]._tooltip._content === "Assist | " + mjet.nrGaruesit + " | " + mjet.emer) {
+                mjetMarkers[i].toggleTooltip();
+            } else if(mjetMarkers[i]._tooltip._content === mjet.nrGaruesit + " | " + mjet.kombesia + " | " + mjet.kategoria + " | " + mjet.emer) {
+                mjetMarkers[i].toggleTooltip();
+            } else {
+                if(mjetMarkers[i].isTooltipOpen()) mjetMarkers[i].toggleTooltip();
             }
         }
-        
         lFMap.setView([mjet.Lat, mjet.Lng], 15);
     }
 
