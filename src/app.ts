@@ -14,7 +14,6 @@ app.use(helmet());
 app.use(bodyparser.json());
 app.use(LoggerMiddleWare);
 app.use('/public', express.static('public'))
-// app.use(express.static(process.cwd() + '/public'));
 Routes(app);
 const server: http.Server = app.listen(3000);
 MsSqlConnect();
