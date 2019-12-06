@@ -29,7 +29,7 @@ let onClientConnected = (sock: net.Socket) => {
     let remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
     console.log('client connected %s', remoteAddress);
     sock.on('data', (data) => {
-        console.log('Client dergoi: ' + data)
+        console.log('Client dergoi: ' + data.toString())
         // console.log('%s dergoi %s', remoteAddress, data);
         sock.write('exit');
     })
