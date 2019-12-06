@@ -29,14 +29,15 @@ let onClientConnected = (sock: net.Socket) => {
     let remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
     console.log('client connected %s', remoteAddress);
     sock.on('data', (data) => {
-        console.log('%d dergoi %d', remoteAddress, data);
+        console.log('Client dergoi: ' + data)
+        // console.log('%s dergoi %s', remoteAddress, data);
         sock.write('exit');
     })
     sock.on('close', () => {
-        console.log('connection from %y closed', remoteAddress);
+        console.log('connection from %s closed', remoteAddress);
     })
     sock.on('error', (err) => {
-        console.log('Conn %u error %u', remoteAddress, err.message);
+        console.log('Conn %s error %s', remoteAddress, err.message);
     })
 }
 
