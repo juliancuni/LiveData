@@ -18,3 +18,30 @@ Routes(app);
 const server: http.Server = app.listen(3000);
 MsSqlConnect();
 server.on("listening", () => { console.info("Live_Data running") });
+
+
+import * as net from 'net';
+
+const host = "localhost";
+const port = 3001;
+
+let onClientConnected = (sock: net.Socket) => {
+    let remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
+    console.log('client connected %s', remoteAddress);
+    sock.on('data', (data) => {
+        console.log('%d dergoi %d', remoteAddress, data);
+        sock.write('exit');
+    })
+    sock.on('close', () => {
+        console.log('connection from %y closed', remoteAddress);
+    })
+    sock.on('error', (err) => {
+        console.log('Conn %u error %u', remoteAddress, err.message);
+    })
+}
+
+const tcpServer = net.createServer(onClientConnected);
+
+tcpServer.listen(port, host, () => {
+    console.log('Listening on %j', tcpServer.address());
+})
