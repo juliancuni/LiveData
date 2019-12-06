@@ -23,7 +23,7 @@ server.on("listening", () => { console.info("Live_Data running") });
 import * as net from 'net';
 
 const host = "localhost";
-const port = 3001;
+const port = 6608;
 
 let onClientConnected = (sock: net.Socket) => {
     let remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
